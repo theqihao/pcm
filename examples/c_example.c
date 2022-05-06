@@ -54,7 +54,7 @@ int main(int argc, const char *argv[])
 	}
 
 #ifdef PCM_DYNAMIC_LIB
-	void * handle = dlopen("libpcm.so", RTLD_LAZY);
+	void * handle = dlopen("./libpcm.so", RTLD_LAZY);
 	if(!handle) {
 		printf("Abort: could not (dynamically) load shared library \n");
 		return -1;

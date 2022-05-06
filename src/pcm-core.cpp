@@ -85,7 +85,9 @@ extern "C" {
 		globalConf.OffcoreResponseMsrValue[1] = events[1].msr_value;
 
 		m->resetPMU();
-		PCM::ErrorCode status = m->program(PCM::EXT_CUSTOM_CORE_EVENTS, &globalConf);
+		// PCM::ErrorCode status = m->program(PCM::EXT_CUSTOM_CORE_EVENTS, &globalConf);
+		// PCM::ErrorCode status = m->program(PCM::CUSTOM_CORE_EVENTS, &globalConf);
+        PCM::ErrorCode status = m->program(PCM::DEFAULT_EVENTS, &globalConf);
 		if(status == PCM::Success)
 			return 0;
 		else
@@ -118,6 +120,30 @@ extern "C" {
 	{
 		return getNumberOfCustomEvents(event_id, globalBeforeState[core_id], globalAfterState[core_id]);
 	}
+    double pcm_c_get_l2_hit(uint32_t core_id)
+    {
+            return getL2CacheHitRatio(globalBeforeState[core_id], globalAfterState[core_id]);
+    }
+
+    double pcm_c_get_l3_hit(uint32_t core_id)
+    {
+            return getL3CacheHitRatio(globalBeforeState[core_id], globalAfterState[core_id]);
+    }
+
+    double pcm_c_get_exec_usage(uint32_t core_id)
+    {
+            return getExecUsage(globalBeforeState[core_id], globalAfterState[core_id]);
+    }
+
+    double pcm_c_get_local_membw(uint32_t core_id)
+    {
+            return getLocalMemoryBW(globalBeforeState[core_id], globalAfterState[core_id]);
+    }
+
+    double pcm_c_get_remote_membw(uint32_t core_id)
+    {
+            return getRemoteMemoryBW(globalBeforeState[core_id], globalAfterState[core_id]);
+    }
 }
 
 void print_usage(const string progname)
@@ -436,6 +462,7 @@ int main(int argc, char * argv[])
 	conf.OffcoreResponseMsrValue[1] = events[1].msr_value;
 
 	PCM::ErrorCode status = m->program(PCM::EXT_CUSTOM_CORE_EVENTS, &conf);
+    // PCM::ErrorCode status = m->program(PCM::DEFAULT_EVENTS, &conf);
     m->checkError(status);
 
     print_cpu_details();
